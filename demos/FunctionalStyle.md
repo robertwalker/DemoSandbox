@@ -132,8 +132,61 @@ func doubleForEach(_ numbers: [Int]) {
 
 ### Java `forEach()`
 
+#### Using a traditional C style `for` loop in Java
+
 ```java
-// TODO
+// Given this list of numbers:
+ForEachDemo demo = new ForEachDemo();
+List<Integer> numbers = List.of(1, 2, 3, 4, 5);
+
+// Traditional style for loop
+public class ForEachDemo {
+    public void doubledFor(List<Integer> numbers) {
+        List<Integer> array = new ArrayList<>();
+        for (int i = 0; i < numbers.size(); i++) {
+            array.add(numbers.get(i) * 2);
+        }
+    }
+}
+// => Doubles: [2, 4, 6, 8, 10]
+```
+
+#### Using a `for...in` style loop in Java
+
+```java
+// Given this list of numbers:
+ForEachDemo demo = new ForEachDemo();
+List<Integer> numbers = List.of(1, 2, 3, 4, 5);
+
+// A for...in style loop
+public class ForEachDemo {
+    public void doubledForIn(List<Integer> numbers) {
+        List<Integer> array = new ArrayList<>();
+        for (Integer number : numbers) {
+            array.add(number * 2);
+        }
+    }
+}
+// => Doubles: [2, 4, 6, 8, 10]
+```
+
+#### Using `forEach()` to double numbers in an array (non-mutating) in Java
+
+```java
+// Given this list of numbers:
+ForEachDemo demo = new ForEachDemo();
+List<Integer> numbers = List.of(1, 2, 3, 4, 5);
+
+// Functional style forEach
+public class ForEachDemo {
+    public void doubledForEach(List<Integer> numbers) {
+        List<Integer> array = new ArrayList<>();
+        numbers.forEach(n -> {
+            array.add(n * 2 );
+        });
+    }
+}
+// => Doubles: [2, 4, 6, 8, 10]
 ```
 
 ## Function `map()`
@@ -188,7 +241,37 @@ func reversedNames(_ names: [String]) {
 ### Java `map()`
 
 ```java
-// TODO
+// Given this list of numbers
+MapDemo demo = new MapDemo();
+List<Integer> numbers = List.of(1, 2, 3, 4, 5);
+
+// Functional style map transformation
+public class MapDemo {
+    public void doubleMap(List<Integer> numbers) {
+        List<Integer> array = numbers.stream().map(number -> number * 2).toList();
+    }
+}
+// => Doubles: [2, 4, 6, 8, 10]
+```
+
+```java
+// Given this list of names
+List<String> names = List.of("Jack Reacher", "Ethan Hunt", "John Wick", "John Patrick Ryan");
+
+// Functional style map transformation from First Last to Last
+public class MapDemo {
+    public void reversedNames(List<String> names) {
+        var array = names.stream().map(name -> {
+            return nameInLastFirst(name);
+        }).toList();
+    }
+}
+// => Names in Last, First:
+// => Reacher, Jack
+// => Hunt, Ethan
+// => Wick, John
+// => Ryan, John Patrick
+
 ```
 
 ## Function `reduce()`
@@ -239,7 +322,33 @@ func doubleMapReduce(_ numbers: [Int]) {
 ### Java `reduce()`
 
 ```java
-// TODO
+// Given this list of numbers
+MapDemo demo = new MapDemo();
+List<Integer> numbers = List.of(1, 2, 3, 4, 5);
+
+// Functional style map/reduce
+public class ReduceDemo {
+    public void doubleMapReduce(List<Integer> numbers) {
+        var array = numbers.stream().map(number -> number * 2).toList();
+        var sum = array.stream().reduce(0, (x, y) -> x + y);
+    }
+}
+// => Doubles: [2, 4, 6, 8, 10]
+// => Sum of doubles: 30
+```
+
+```java
+// Given this list of numbers
+MapDemo demo = new MapDemo();
+List<Integer> numbers = List.of(1, 2, 3, 4, 5);
+
+// Functional style map/reduce using mapToInt and sum functions
+public class ReduceDemo {
+    public void doubleMapReduceWithSum(List<Integer> numbers) {
+        var array = numbers.stream().mapToInt(number -> number * 2).sum();
+    }
+}
+// => Sum of doubles: 30
 ```
 
 ## Function Chaining
@@ -277,7 +386,19 @@ func doubleMapReduceChain(_ numbers: [Int]) {
 ````
 
 ```java
-// TODO - Java
+// Given this list of numbers
+MapDemo demo = new MapDemo();
+List<Integer> numbers = List.of(1, 2, 3, 4, 5);
+
+// Functional style map/reduce chaining
+public class ReduceDemo {
+    public void doubleMapReduce(List<Integer> numbers) {
+        var sum = numbers.stream()
+            .map(number -> number * 2)
+            .reduce(0, (x, y) -> x + y);
+    }
+}
+// => Sum of doubles: 30
 ```
 
 ## Function `filter()`
@@ -342,7 +463,29 @@ func namesStartingWithJ(_ names: [String]) {
 ### Java `filter()`
 
 ```java
-// TODO
+// Given this list of numbers
+let numbers = [1, 2, 3, 4, 5]
+
+// Functional style filter numbers
+public class FilterDemo {
+    public void oddNumbers(List<Integer> numbers) {
+        var array = numbers.stream().filter(n -> n % 2 > 0).toList();
+    }
+}
+// => Odd Numbers: [1, 3, 5]
+```
+
+```java
+// Given this list of names
+let names = ["Jack Reacher", "Ethan Hunt", "John Wick", "John Patrick Ryan"]
+
+// Functional style filter strings
+public class FilterDemo {
+    public void namesStartingWithJ(List<String> names) {
+        var array = names.stream().filter(n -> n.startsWith("J")).toList();
+    }
+}
+// => Names starting with "J": [Jack Reacher, John Wick, John Patrick Ryan]
 ```
 
 ## Function `flatMap()`
@@ -379,7 +522,25 @@ func doubleFlatMap(_ numbers: [[Int]]) {
 ### Java `flatMap()`
 
 ```java
-// TODO
+// Given this list of lists of numbers
+FlatMapDemo demo = new FlatMapDemo();
+List<List<Integer>> numbers = List.of(
+    List.of(1),
+    List.of(2, 3),
+    List.of(4, 5, 6),
+    List.of(7, 8, 9, 10)
+);
+
+// Functional style flat map transformation
+public class FlatMapDemo {
+    public void doubleFlatMap(List<List<Integer>> numbers) {
+        var array = numbers.stream()
+            .flatMap(a -> a.stream()
+            .map(n -> n * 2))
+            .toList();
+    }
+}
+// => Doubles: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
 ```
 
 ## Function `compactMap()`
