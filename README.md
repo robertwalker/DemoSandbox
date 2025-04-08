@@ -10,4 +10,5 @@
 
 ### Behavioral Patterns
 
+* [Chain of Responsibility](demos/ChainOfResponsibilityPattern.md)
 * [Strategy](demos/StrategyPattern.md)
