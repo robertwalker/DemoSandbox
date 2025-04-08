@@ -1,7 +1,8 @@
 # Chain of Responsibility Pattern
 
-The "Chain of Responsibility" is a behavioral design pattern that move the decision logic into isolated "handler"
-objects. A more thorough explanation can be found here []().
+The "Chain of Responsibility" is a behavioral design pattern that moves the decision logic into isolated "handler"
+objects. A more thorough explanation can be found here
+[Refactoring Guru: Chain of Responsibility](https://refactoring.guru/design-patterns/chain-of-responsibility).
 
 Here is a diagram of a very basic Chain of Responsibility pattern:
 
