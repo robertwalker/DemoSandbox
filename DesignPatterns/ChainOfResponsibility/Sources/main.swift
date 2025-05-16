@@ -1,8 +1,8 @@
 // The Swift Programming Language
 // https://docs.swift.org/swift-book
 
-print("Strategy Pattern Demo")
-print("=======================")
+print("Chain of Responsibility Pattern Demo")
+print("====================================")
 
 class MainApplication {
     func run() {
@@ -17,7 +17,7 @@ class MainApplication {
         for account in accounts {
             mainHandler.activate(account: account)
         }
-        print("=======================")
+        print("====================================")
     }
 }
 

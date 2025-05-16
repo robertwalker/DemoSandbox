@@ -8,5 +8,5 @@ This demo shows a simple implementation of the [Strategy Pattern](https://refact
 
 ## Swift Example
 
-Open the [Swift Package](../StrategyPattern/README.md) project in [Xcode](https://developer.apple.com/xcode/) to
-view and run the Strategy Pattern demo.
+Here is the [README](../DesignPatterns/StrategyPattern/README.md) for the demo project. To run the demo open the
+[Package.swift](../DesignPatterns/StrategyPattern/Package.swift) file in Xcode and press the play button.
