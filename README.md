@@ -17,7 +17,7 @@
 * [Chain of Responsibility](demos/ChainOfResponsibilityPattern.md)
 * [Strategy](demos/StrategyPattern.md)
 
-### Intermediate Git
+## Intermediate Git
 
 * [Merge Strategies](demos/IntermediateGit.md#merge-trategies)
 * [Interactive Rebase](demos/IntermediateGit.md#interactive-rebase)
