@@ -4,8 +4,8 @@
 
 ### Normal Merge
 
-A normal merge is one where the entire history of commits is preserved. There is no rebasing or changing of history on
-either of the two branches being merged.
+A normal merge preserves the entire history of commits. There is no rebasing, or changing of history, on either of the
+two branches being merged.
 
 A "Fast Forward" merge is performed when the two branches being merged have not diverged. In this example the `topic`
 branch contains new commits, but the `main` branch does not.
@@ -43,7 +43,8 @@ gitGraph:
 ```
 
 When the two branches being merged have diverged (both branches have commits that are not in common) Git will create
-what is known as a "Merge Commit" which is a special type of commit that ties their histories together.
+what is known as a "Merge Commit" which is a special type of commit that contains no changes but rather ties the
+histories of the two branches together.
 
 In this example, commit `D` and commit `E` are parent commits of the merge commit (the commit shown as a open circle).
 
@@ -91,6 +92,7 @@ It is also possible to force a merge commit to be created even when "Fast Forwar
 is the default when merging Pull Requests (PRs) in GitHub.
 
 ```bash
+git switch main
 git merge --no-ff topic
 ```
 
@@ -134,10 +136,10 @@ gitGraph:
 
 A "Squash Merge" differs from a "Normal Merge" in that history is not preserved. This type of merge begins by combining
 all commits on the branch to be merged into a single commit, effectively "squashing" them into a single change set and
-combining the commit messages from all commit (by default) into the new single commit.
+combining the commit messages from all commits (by default) into the new single commit.
 
-In this example commits `C`, `D` and `E` are combined into a single commit `F` inside the target branch, `main` in this
-case.
+In this example commits `C`, `D` and `E` are combined into a single commit `F` on the target branch, which is `main` in
+this case.
 
 ```mermaid
 ---
@@ -182,18 +184,19 @@ gitGraph:
 Notice that the `topic` branch is untouched. The commit `F` contains the same changes as the three commits on the
 `topic` branch. The two branches no longer share a common history.
 
-It is also recommended to no longer continue adding commits to the `topic` branch since they no longer share the same
-history. Instead the `topic` branch should be deleted after the merge and a new `topic` branch should be created from
-base branch (`main` int this example).
+It is also recommended to discontinue adding commits to the `topic` branch since they no longer share the same
+history. Instead the `topic` branch should be deleted after the merge, and a new `topic` branch should be created from
+the base branch (`main` in this example).
 
-### Rebase Merge
+### Rebase and Merge
 
-A "Rebase and Merge" is similar to a 'Squash Merge" in that the full history of the two branches is not preserved. It
-differs from "Squash Merge" where the commits on the `topic` branch are "rebased" onto the target `main` branch. Like
-"Squash Merge" the `topic` branch is not touched and remains diverged from the `main` branch.
+A "Rebase and Merge" is similar to a "Squash Merge" in that the full history of the two branches is not preserved. It
+differs from "Squash Merge" where the commits on the `topic` branch are individually "rebased" onto the target branch
+(`main` in this example). Like "Squash Merge" the `topic` branch is untouched and remains diverged from the `main`
+branch.
 
-Also like "Squash Merge" it is recommended to avoid adding any new commits to the `topic` branch, which should be
-deleted after merging. Any new work should be performed on a new branch off of the `main` branch.
+It is also recommended to avoid adding any new commits to the `topic` branch, which should be deleted after merging.
+Any new work should be performed on a new branch based on the `main` branch.
 
 ```mermaid
 ---
@@ -239,13 +242,12 @@ gitGraph:
 
 ### Long Running Branches
 
-Long running branches are ones where they are expected to continue after merging to another long running branch. In the
-following example the `main` and `develop` branches are call "Long Running" because they are expected to remain after
-a merge (typically via a Pull Request).
+In the following example the `main` and `develop` branches are call "Long Running" because they are expected to remain
+after a merge. New commits will be add to these branches as feature work continues.
 
 ```mermaid
 ---
-title: Merge with Divergent Commits
+title: Diverged Feature Branch
 config:
   theme: default
 mainBranchName: main
@@ -266,7 +268,7 @@ gitGraph:
 
 ```mermaid
 ---
-title: Squash Merge Feature to Develop
+title: Squash Merge Feature into Develop
 config:
   theme: default
 mainBranchName: main
@@ -289,7 +291,7 @@ gitGraph:
 
 ```mermaid
 ---
-title: Squash Merge Develop to Main
+title: Squash Merge Develop into Main
 config:
   theme: default
 mainBranchName: main
@@ -309,19 +311,23 @@ gitGraph:
     checkout develop
     commit id: "G" type: REVERSE
     checkout main
-    commit id: "I" type: HIGHLIGHT
+    commit id: "H" type: HIGHLIGHT
 ```
 
 The above example demonstrates the problem with performing "Squash Merge" or "Rebase and Merge" operations between two
-long running branches. Notice that `main` and `develop` have diverged and do not share a common history. Even though the
-"H" commit on `main` contains the changes from all three commits on `develop` the changes have be combined into the
-single commit "H" so that Git can no longer track the full history of the two long running branches.
+long running branches.
 
-Attempting to "backport" from `main` to `develop` doesn't really solve the issue since Git will attempt to reapply all
-the changes in commit "H" back to `develop` sincere the're no way to track the history even though `develop` already
-contains all the same changes.
+Notice that `main` and `develop` have diverged and do not share a common history.
 
-One solution is to use "Normal Merge" between long running branches.
+Even though the `H` commit on `main` contains the same changes that were "squashed" into `G` on `develop` the "Squash
+Merge" from `develop` to `main` creates another new commit (`H` on `main`). As such Git can no longer track the full
+history of the two long running branches.
+
+Attempting to "backport" from `main` to `develop` doesn't really solve the issue either, since Git will attempt to
+reapply all the changes in commit `H` back to `develop`. There is no way to track the history, even though `develop`
+already contains all the same changes.
+
+One solution to this problem is to use a "Normal Merge" between long running branches.
 
 ```mermaid
 ---
@@ -348,11 +354,11 @@ gitGraph:
     merge develop
 ```
 
-Remember to delete the short lived branch (`feature` in this example) where "Squash Merge" was used.
+Remember to delete the "Short Lived" branch (`feature` in this example) where "Squash Merge" was used.
 
 ```mermaid
 ---
-title: Squash Merge Develop to Main
+title: Squash Merge Develop into Main
 config:
   theme: default
 mainBranchName: main
@@ -366,13 +372,12 @@ gitGraph:
     checkout main
     commit id: "D"
     checkout develop
-    commit id: "E" type: HIGHLIGHT
+    commit id: "G" type: HIGHLIGHT
     checkout main
     merge develop
 ```
 
-From here it is safe to continue committing changes to the `develop` branch, typically via "Squash Merging" from short
-lived feature branches.
+From here it is safe to continue committing new changes to the `develop` branch.
 
 ```mermaid
 ---
@@ -390,12 +395,12 @@ gitGraph:
     checkout main
     commit id: "D"
     checkout develop
-    commit id: "E" type: HIGHLIGHT
+    commit id: "G" type: HIGHLIGHT
     checkout main
     merge develop
     checkout develop
-    commit id: "F"
-    commit id: "G"
+    commit id: "H"
+    commit id: "I"
 ```
 
 ## Interactive Rebase
@@ -408,7 +413,7 @@ locally never having been pushed to a remote repository.
 
 ```mermaid
 ---
-title: Squash Merge Develop to Main
+title: Diverged Feature Branch
 config:
   theme: default
 mainBranchName: main
@@ -427,12 +432,26 @@ gitGraph:
 ```
 
 In this example multiple commits have been added as the feature is being developed. Some commits may be work-in-progress
-changes, fix bugs or typos, etc.
+changes, bugs or typo fixes, etc.
 
-When it's time to complete the feature and prepare a PR for review we check and logs and notice that a new commit was
-added to `main` while working on the `topic` branch. While any of the merging strategies will work fine, an alternative
-option would be to rebase all the commits on the `topic` branch into a single commit before pushing to the remote
-repository. This gives us a chance to clean up the local commits and provide a clean history.
+When it's time to complete the feature, and prepare a PR for review, we first check the Git log. We notice that a new
+commit has been added to the `main` branch while we were working on our `topic` branch. We could use one of the above
+merging strategies, which would work. However, an alternative option would be to "rebase" all the commits on the `topic`
+branch into a single commit before pushing to the remote repository. This gives us a chance to clean up our local
+commits, update commit messages, etc. This technique can be used to maintain a cleaner history.
+
+Here's what that might look like in the Git history log:
+
+```bash
+$ git log --graph --oneline --all
+* ba8f864 (HEAD -> topic) F
+* 1acfeca D
+* f099586 C
+| * df5afca (main) E
+|/  
+* 5d2a95d B
+* 76a6bc4 A
+```
 
 First we will combine all our local commits on `topic` into a new commit that contains all the changes.
 
@@ -443,7 +462,7 @@ git rebase -i HEAD~3
 
 ```mermaid
 ---
-title: Squash Merge Develop to Main
+title: Diverged Feature Branch
 config:
   theme: default
 mainBranchName: main
@@ -453,9 +472,20 @@ gitGraph:
     commit id: "B"
     branch topic
     checkout topic
-    commit id: "G"
+    commit id: "G" type: HIGHLIGHT
     checkout main
     commit id: "E"
+```
+
+Now the Git log should look something like this:
+
+```bash
+$ git log --graph --oneline --all
+* 44da8db (HEAD -> topic) G
+| * df5afca (main) E
+|/  
+* 5d2a95d B
+* 76a6bc4 A
 ```
 
 Next we want to integrate the new commit from `main` into our `topic` branch by rebasing the `topic` branch onto the
@@ -472,7 +502,7 @@ The resulting history would look like this following.
 
 ```mermaid
 ---
-title: Squash Merge Develop to Main
+title: Rebased Feature Branch
 config:
   theme: default
 mainBranchName: main
@@ -483,5 +513,18 @@ gitGraph:
     commit id: "E"
     branch topic
     checkout topic
-    commit id: "H"
+    commit id: "H" type: HIGHLIGHT
 ```
+
+The history should now appear to be linear (no diverging commits):
+
+```bash
+$ git log --graph --oneline --all
+* f78a691 (HEAD -> topic) H
+* df5afca (main) E
+* 5d2a95d B
+* 76a6bc4 A
+```
+
+Note that the `H` commit above is the same change as `G` commit in the previous graph, however the commit hash will be
+different as a result of rebasing the `topic` branch.
